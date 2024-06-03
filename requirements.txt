@@ -1,0 +1,8 @@
+bs4
+Flask
+lxml
+pandas
+requests
+APScheduler
+pytz
+tabulate
