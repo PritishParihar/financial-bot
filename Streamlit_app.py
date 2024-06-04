@@ -80,12 +80,12 @@ def job():
 
 def schedule_daily_job():
     ist = pytz.timezone('Asia/Kolkata')
-    target_time = datetime.now(ist).replace(hour=7, minute=50, second=0, microsecond=0)
+    target_time = datetime.now(ist).replace(hour=7, minute=55, second=0, microsecond=0)
     if datetime.now(ist) > target_time:
         target_time += timedelta(days=1)
 
     seconds_until_target = (target_time - datetime.now(ist)).total_seconds()
-    schedule.every().day.at("7:50").do(job)
+    schedule.every().day.at("7:55").do(job)
 
     time.sleep(seconds_until_target)
     while True:
