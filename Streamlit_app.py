@@ -63,7 +63,7 @@ def execute_strategy():
         stock_data = fetch_stock_data(session, CHARTINK_URL, CONDITION, headers)
         
         TELEGRAM_TOKEN = '7449783431:AAHqe61k6R14Z_YismA2VEJYeXsACZbpgYg'
-        CHAT_ID = '-4287405834'
+        CHAT_ID = '-1002199303920'
         strategy_name = "Strategy: TSI >= 0 Screener"
         
         # Convert DataFrame to Markdown table format for Telegram
@@ -80,7 +80,7 @@ def job():
 def schedule_daily_job():
     scheduler = BackgroundScheduler()
     ist = pytz.timezone('Asia/Kolkata')
-    scheduler.add_job(job, 'cron', hour=8, minute=0, timezone=ist)
+    scheduler.add_job(job, 'cron', hour=17, minute=0, timezone=ist)
     scheduler.start()
 
 def main():
