@@ -62,8 +62,8 @@ def execute_strategy():
         headers = {"X-Csrf-Token": csrf_token}
         stock_data = fetch_stock_data(session, CHARTINK_URL, CONDITION, headers)
         
-        TELEGRAM_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
-        CHAT_ID = 'YOUR_CHAT_ID'
+        TELEGRAM_TOKEN = '7449783431:AAHqe61k6R14Z_YismA2VEJYeXsACZbpgYg'
+        CHAT_ID = '-4287405834'
         strategy_name = "Strategy: TSI >= 0 Screener"
         
         # Convert DataFrame to Markdown table format for Telegram
