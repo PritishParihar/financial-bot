@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup as bs
 import pandas as pd
-from datetime import datetime, time
+from datetime import datetime, timedelta
 import pytz
 import schedule
 import time as time_module
