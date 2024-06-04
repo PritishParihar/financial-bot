@@ -2,10 +2,9 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup as bs
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 import pytz
-import schedule
-import time as time_module
+from apscheduler.schedulers.background import BackgroundScheduler
 
 # Define constants
 CHARTINK_URL = 'https://chartink.com/screener/process'
@@ -32,12 +31,12 @@ CONDITION = {
                    '{custom_indicator_22714_end} )"{custom_indicator_22715_end} , 13 )'
                    '{custom_indicator_23680_end} and 1 day ago  {custom_indicator_23679_start}"(  {custom_indicator_22711_start}'
                    'ema(  ema(  {custom_indicator_22709_start} "close - 1 candle ago close"{custom_indicator_22709_end} , 25 ) , 13 )'
-                   '{custom_indicator_22711_end} /  1 day ago {custom_indicator_22714_start}'
+                   '{custom_indicator_22711_end} /  {custom_indicator_22714_start}'
                    'ema(  ema(  {custom_indicator_22712_start}"abs(  close - 1 candle ago close )"{custom_indicator_22712_end} , 25 ) , 13 )'
-                   '{custom_indicator_22714_end} )"{custom_indicator_23679_end} <= 1 day ago {custom_indicator_23680_start}'
+                   '{custom_indicator_22714_end} ) * 100"{custom_indicator_23679_end} <= 1 day ago  {custom_indicator_23680_start}'
                    'ema(  {custom_indicator_22715_start} "100 * (  {custom_indicator_22711_start}'
                    'ema(  ema(  {custom_indicator_22709_start} "close - 1 candle ago close"{custom_indicator_22709_end} , 25 ) , 13 )'
-                   '{custom_indicator_22711_end} /  1 day ago {custom_indicator_22714_start}'
+                   '{custom_indicator_22711_end} /  {custom_indicator_22714_start}'
                    'ema(  ema(  {custom_indicator_22712_start}"abs(  close - 1 candle ago close )"{custom_indicator_22712_end} , 25 ) , 13 )'
                    '{custom_indicator_22714_end} )"{custom_indicator_22715_end} , 13 )'
                    '{custom_indicator_23680_end} ) ) '
@@ -63,8 +62,8 @@ def execute_strategy():
         headers = {"X-Csrf-Token": csrf_token}
         stock_data = fetch_stock_data(session, CHARTINK_URL, CONDITION, headers)
         
-        TELEGRAM_TOKEN = '7449783431:AAHqe61k6R14Z_YismA2VEJYeXsACZbpgYg'
-        CHAT_ID = '-4287405834'
+        TELEGRAM_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
+        CHAT_ID = 'YOUR_CHAT_ID'
         strategy_name = "Strategy: TSI >= 0 Screener"
         
         # Convert DataFrame to Markdown table format for Telegram
@@ -79,18 +78,10 @@ def job():
     execute_strategy()
 
 def schedule_daily_job():
+    scheduler = BackgroundScheduler()
     ist = pytz.timezone('Asia/Kolkata')
-    target_time = datetime.now(ist).replace(hour=7, minute=55, second=0, microsecond=0)
-    if datetime.now(ist) > target_time:
-        target_time += timedelta(days=1)
-
-    seconds_until_target = (target_time - datetime.now(ist)).total_seconds()
-    schedule.every().day.at("7:55").do(job)
-
-    time.sleep(seconds_until_target)
-    while True:
-        schedule.run_pending()
-        time_module.sleep(1)
+    scheduler.add_job(job, 'cron', hour=8, minute=0, timezone=ist)
+    scheduler.start()
 
 def main():
     st.title("Stock Screener and Telegram Notifier")
