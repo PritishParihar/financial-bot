@@ -8,3 +8,4 @@ pytz
 tabulate
 streamlit
 schedule
+wakepy
