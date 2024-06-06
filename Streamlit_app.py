@@ -1,3 +1,4 @@
+import ctypes
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup as bs
@@ -5,7 +6,6 @@ import pandas as pd
 from datetime import datetime
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
-from wakepy import keep  # Correct import
 
 # Define constants
 CHARTINK_URL = 'https://chartink.com/screener/process'
@@ -99,6 +99,10 @@ def main():
     st.write("This app runs a stock screening strategy and sends the results to a Telegram channel.")
 
 if __name__ == "__main__":
-    with keep.running():
-        main()
-        schedule_daily_job()
+    # Prevent system from sleeping
+    ES_CONTINUOUS = 0x80000000
+    ES_SYSTEM_REQUIRED = 0x00000001
+    ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
+    
+    main()
+    schedule_daily_job()
