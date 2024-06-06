@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
-import time
+import wakepy
 
 # Define constants
 CHARTINK_URL = 'https://chartink.com/screener/process'
@@ -84,19 +84,6 @@ def schedule_daily_job():
     scheduler.add_job(job, 'cron', hour=17, minute=0, timezone=ist)
     scheduler.start()
 
-# Ping every 30 min to keep app alive 
-
-URL = "financial-bot-f4stjc72gyx8q5kdjh9suk.streamlit.app"
-
-while True:
-    try:
-        response = requests.get(URL)
-        print(f"Pinged {URL} - Status Code: {response.status_code}")
-    except Exception as e:
-        print(f"Failed to ping {URL} - Error: {str(e)}")
-    time.sleep(1800)  # Ping every 30 minutes
-
-
 def main():
     st.title("Stock Screener and Telegram Notifier")
 
@@ -112,5 +99,6 @@ def main():
     st.write("This app runs a stock screening strategy and sends the results to a Telegram channel.")
 
 if __name__ == "__main__":
-    main()
-    schedule_daily_job()
+    with wakepy.keepawake(keep_screen_awake=False):
+        main()
+        schedule_daily_job()
