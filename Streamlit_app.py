@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
-from wakepy import wakelock  # Correct import
+from wakepy import keep  # Correct import
 
 # Define constants
 CHARTINK_URL = 'https://chartink.com/screener/process'
@@ -99,6 +99,6 @@ def main():
     st.write("This app runs a stock screening strategy and sends the results to a Telegram channel.")
 
 if __name__ == "__main__":
-    with wakelock(keep_screen_awake=False):
+    with keep.running():
         main()
         schedule_daily_job()
